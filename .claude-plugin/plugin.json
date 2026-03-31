@@ -11,8 +11,8 @@
   "keywords": ["statusline", "usage", "cost", "context-window", "ccusage", "monitoring"],
   "userConfig": {
     "cost_decimals": {
-      "description": "Number of decimal places for cost display (default: 4)",
-      "default": "4"
+      "description": "Number of decimal places for cost display (default: 2)",
+      "default": "2"
     }
   }
 }

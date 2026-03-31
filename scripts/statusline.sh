@@ -10,7 +10,7 @@ input=$(cat)
 # --- Config: cost decimal places (default: 4) ---
 CONF="$HOME/.claude/usage-monitor.conf"
 [ -f "$CONF" ] && source "$CONF"
-COST_DECIMALS="${COST_DECIMALS:-${CLAUDE_PLUGIN_OPTION_cost_decimals:-4}}"
+COST_DECIMALS="${COST_DECIMALS:-${CLAUDE_PLUGIN_OPTION_cost_decimals:-2}}"
 
 # --- Parse JSON ---
 MODEL=$(echo "$input" | jq -r '.model.display_name // "?"' | sed 's/Claude //')
