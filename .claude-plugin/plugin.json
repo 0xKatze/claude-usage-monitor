@@ -1,0 +1,12 @@
+{
+  "name": "claude-usage-monitor",
+  "version": "1.0.0",
+  "description": "Context window & cost monitoring with ccusage integration for Claude Code",
+  "author": {
+    "name": "katze",
+    "email": "katze@jslab.dev"
+  },
+  "repository": "https://github.com/0xKatze/claude-usage-monitor",
+  "license": "MIT",
+  "keywords": ["statusline", "usage", "cost", "context-window", "ccusage", "monitoring"]
+}
