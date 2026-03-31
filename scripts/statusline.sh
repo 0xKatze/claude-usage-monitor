@@ -56,25 +56,28 @@ if [ -f "$CACHE" ]; then
     [ "$(head -1 "$CACHE")" = "$(date +%Y-%m-%d)" ] && DC=$(printf "%.${COST_DECIMALS}f" "$(tail -1 "$CACHE")")
 fi
 
+# --- Context size label ---
+[ "$CTX_SIZE" -ge 1000000 ] && CL="1M" || CL="200k"
+
 # --- Build ---
 O="${CYN}${MODEL}${RST} "
-O+="${CC}${BAR}${RST} ${CC}${CTX_PCT}%${RST}"
+O+="${CC}${BAR}${RST} ${CC}${CTX_PCT}%${RST}${DIM}/${CL}${RST}"
 O+=" ${DIM}◆${RST} ${MAG}\$${COST}${RST}"
-[ -n "$DC" ] && [ "$DC" != "0" ] && O+="${DIM}‹\$${DC}›${RST}"
+[ -n "$DC" ] && [ "$DC" != "0" ] && O+="${DIM}‹\$${DC}/d›${RST}"
 [ -n "$DUR" ] && O+=" ${DUR}"
-([ "$LINES_ADD" -gt 0 ] || [ "$LINES_DEL" -gt 0 ]) && O+=" ${GRN}+${LINES_ADD}${RST}${RED}-${LINES_DEL}${RST}"
+([ "$LINES_ADD" -gt 0 ] || [ "$LINES_DEL" -gt 0 ]) && O+=" ${GRN}+${LINES_ADD}${RST} ${RED}-${LINES_DEL}${RST}"
 
 if [ -n "$RATE_5H" ] || [ -n "$RATE_7D" ]; then
     O+=" ${DIM}│${RST}"
     if [ -n "$RATE_5H" ]; then
         RI5=$(echo "$RATE_5H" | cut -d. -f1); R5C=$(cpct "$RI5")
-        O+=" ${DIM}5h${RST}${R5C}${RI5}%${RST}"
+        O+=" ${DIM}5h${RST} ${R5C}${RI5}%${RST}"
         if [ -n "$RATE_5H_RESET" ] && [ "$RATE_5H_RESET" != "null" ] && [ "$RI5" -ge 50 ]; then
             LEFT=$(( (RATE_5H_RESET / 1000 - $(date +%s)) / 60 ))
             [ "$LEFT" -gt 0 ] && O+="${DIM}⟳${LEFT}m${RST}"
         fi
     fi
-    [ -n "$RATE_7D" ] && { RI7=$(echo "$RATE_7D" | cut -d. -f1); O+=" ${DIM}7d${RST}$(cpct "$RI7")${RI7}%${RST}"; }
+    [ -n "$RATE_7D" ] && { RI7=$(echo "$RATE_7D" | cut -d. -f1); O+=" ${DIM}7d${RST} $(cpct "$RI7")${RI7}%${RST}"; }
 fi
 
 echo -e "$O"
