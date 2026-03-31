@@ -1,6 +1,6 @@
 {
   "name": "claude-usage-monitor",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Context window & cost monitoring with ccusage integration for Claude Code",
   "author": {
     "name": "katze",
@@ -8,5 +8,11 @@
   },
   "repository": "https://github.com/0xKatze/claude-usage-monitor",
   "license": "MIT",
-  "keywords": ["statusline", "usage", "cost", "context-window", "ccusage", "monitoring"]
+  "keywords": ["statusline", "usage", "cost", "context-window", "ccusage", "monitoring"],
+  "userConfig": {
+    "cost_decimals": {
+      "description": "Number of decimal places for cost display (default: 4)",
+      "default": "4"
+    }
+  }
 }

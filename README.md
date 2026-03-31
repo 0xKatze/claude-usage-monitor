@@ -40,6 +40,20 @@ Or test locally:
 claude --plugin-dir ./claude-statusline-plugin
 ```
 
+## Configuration
+
+### Cost decimal places
+
+Default is 4 decimal places. To change:
+
+```bash
+# Option 1: Config file
+echo "COST_DECIMALS=2" > ~/.claude/usage-monitor.conf
+
+# Option 2: Environment variable
+export COST_DECIMALS=2
+```
+
 ## Requirements
 
 - `jq` — JSON parser (`sudo apt install jq`)

@@ -1,14 +1,23 @@
 #!/bin/bash
 # Claude Code Custom Status Line — claude-usage-monitor plugin
-# Shows: [Model] ▓▓▓░░ 42%/1M | $1.23($5/day) 30m +15/-3 | 5h:12%
+# Shows: [Model] ▓▓▓░░ 42%/1M | $1.2300($5.00/day) 30m +15/-3 | 5h:12%
+#
+# Config: COST_DECIMALS env var or ~/.claude/usage-monitor.conf
+#   echo "COST_DECIMALS=2" > ~/.claude/usage-monitor.conf
 
 input=$(cat)
+
+# --- Config: cost decimal places (default: 4) ---
+CONF="$HOME/.claude/usage-monitor.conf"
+[ -f "$CONF" ] && source "$CONF"
+COST_DECIMALS="${COST_DECIMALS:-${CLAUDE_PLUGIN_OPTION_cost_decimals:-4}}"
 
 # --- Parse JSON ---
 MODEL=$(echo "$input" | jq -r '.model.display_name // "?"' | sed 's/Claude //')
 CTX_PCT=$(echo "$input" | jq -r '.context_window.used_percentage // 0' | cut -d. -f1)
 CTX_SIZE=$(echo "$input" | jq -r '.context_window.context_window_size // 0')
-COST=$(echo "$input" | jq -r '.cost.total_cost_usd // 0')
+COST_RAW=$(echo "$input" | jq -r '.cost.total_cost_usd // 0')
+COST=$(printf "%.${COST_DECIMALS}f" "$COST_RAW")
 DURATION_MS=$(echo "$input" | jq -r '.cost.total_duration_ms // 0')
 LINES_ADD=$(echo "$input" | jq -r '.cost.total_lines_added // 0')
 LINES_DEL=$(echo "$input" | jq -r '.cost.total_lines_removed // 0')
@@ -37,7 +46,10 @@ CACHE="/tmp/.ccusage_today_cost"
 DC=""
 if [ -f "$CACHE" ]; then
     CD=$(head -1 "$CACHE" 2>/dev/null)
-    [ "$CD" = "$(date +%Y-%m-%d)" ] && DC=$(tail -1 "$CACHE" 2>/dev/null)
+    if [ "$CD" = "$(date +%Y-%m-%d)" ]; then
+        DC_RAW=$(tail -1 "$CACHE" 2>/dev/null)
+        DC=$(printf "%.${COST_DECIMALS}f" "$DC_RAW")
+    fi
 fi
 
 # --- Build output ---
